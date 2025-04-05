@@ -11,7 +11,10 @@ public class SolitaireCipher {
 	 * TODO: Generates a keystream of the given size
 	 */
 	public int[] getKeystream(int size) {
-		if (size < 0) return new int[0];
+		if (size == 0) return new int[0];
+		if (size < 0) {
+			throw new IllegalArgumentException();
+		}
 		int errcode;
 
 		int[] keystream = new int[size];
@@ -21,7 +24,7 @@ public class SolitaireCipher {
 			errcode = keystream[i];
 			if (errcode == -1) {
 				throw new NullPointerException();
-			}
+				}
 		}
 		return keystream;
 	}
@@ -51,30 +54,30 @@ public class SolitaireCipher {
 	/* 
 	 * TODO: Decodes the input message using the algorithm described in the pdf.
 	 */
-	public String decode(String msg) {
-		if (msg == null) {
-			return null;
-		}
+    public String decode(String msg) {
+        if (msg == null) {
+            return null;
+        }
 
-		msg = msg.replaceAll("[^a-zA-Z]", "").toUpperCase();
+        msg = msg.replaceAll("[^a-zA-Z]", "").toUpperCase();
 
-		if (msg.isEmpty()) {
-			return "";
-		}
+        if (msg.isEmpty()) {
+            return "";
+        }
 
-		int[] keystream = getKeystream(msg.length());
+        int[] keystream = getKeystream(msg.length());
 
-		char[] decodedChars = new char[msg.length()];
-		for (int i = 0; i < msg.length(); i++) {
-			int charValue = msg.charAt(i) - 'A' + 1;
-			int decodedValue = (charValue - keystream[i] + 25) % 26;
-			if (decodedValue < 0) {
-				decodedValue += 26;
-			}
-			char decodedChar = (char) (decodedValue + 'A');
-			decodedChars[i] = decodedChar;
-		}
+        char[] decodedChars = new char[msg.length()];
+        for (int i = 0; i < msg.length(); i++) {
+            int charValue = msg.charAt(i) - 'A'; 
+            int decodedValue = (charValue - keystream[i]) % 26; 
+            if (decodedValue < 0) {
+                decodedValue += 26; 
+            }
+            char decodedChar = (char) (decodedValue + 'A'); 
+            decodedChars[i] = decodedChar;
+        }
 
-		return new String(decodedChars);
-	}
+        return new String(decodedChars);
+    }
 }
